@@ -1,5 +1,21 @@
+const fetchRetry = require('fetch-retry')(fetch)
+
 it('receives a mocked response to a REST API request', async () => {
   const response = await fetch('https://api.example.com/user')
+
+  expect(response.status).toBe(200)
+  expect(response.statusText).toBe('OK')
+  expect(await response.json()).toEqual({
+    firstName: 'John',
+    lastName: 'Maverick',
+  })
+})
+
+it('receives a mocked response to a REST API fetch-retry request', async () => {
+  const response = await fetchRetry('https://api.example.com/user', {
+    retries: 3,
+    retryDelay: 1000,
+  })
 
   expect(response.status).toBe(200)
   expect(response.statusText).toBe('OK')
